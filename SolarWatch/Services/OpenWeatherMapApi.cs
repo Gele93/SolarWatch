@@ -7,7 +7,7 @@ namespace SolarWatch.Services
     {
         private const string _apikey = "600345c91e1c34c8389209c358d1c32a";
         private readonly ILogger<OpenWeatherMapApi> _logger;
-        
+
         public OpenWeatherMapApi(ILogger<OpenWeatherMapApi> logger)
         {
             _logger = logger;
@@ -21,7 +21,12 @@ namespace SolarWatch.Services
 
             _logger.LogInformation($"Calling {url}");
 
-            return client.DownloadString(url);
+            var cityData = client.DownloadString(url);
+
+            if (cityData == "[]") throw new Exception($"Could not download city data: {url}");
+
+            return cityData;
+
         }
     }
 }

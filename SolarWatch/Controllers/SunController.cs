@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SolarWatch.Services;
+using SolarWatch.Models;
 
 namespace SolarWatch.Controllers
 {
@@ -25,9 +26,11 @@ namespace SolarWatch.Controllers
         }
 
         [HttpGet("sunrise")]
-        public IActionResult GetSunrise(int year, int month, int day, string city)
+        public IActionResult GetSunrise(DateData dateData, string city)
         {
-            var date = new DateOnly(year, month, day);
+
+            if (city == null) return BadRequest("invalid city name");
+            if (!DateOnly.TryParse(dateData.ToString(), out var date)) return BadRequest("Invalid date");
 
             try
             {
@@ -46,9 +49,11 @@ namespace SolarWatch.Controllers
         }
 
         [HttpGet("sunset")]
-        public IActionResult GetSunset(int year, int month, int day, string city)
+        public IActionResult GetSunset(DateData dateData, string city)
         {
-            var date = new DateOnly(year, month, day);
+           
+            if (city == null) return BadRequest("invalid city name");
+            if (!DateOnly.TryParse(dateData.ToString(), out var date)) return BadRequest("Invalid date");
 
             try
             {
