@@ -26,11 +26,15 @@ namespace SolarWatch.Controllers
         }
 
         [HttpGet("sunrise")]
-        public async Task<IActionResult> GetSunrise(DateData dateData, string city)
+        public async Task<IActionResult> GetSunrise(DateTime dateData, string city)
         {
 
             if (city == null) return BadRequest("invalid city name");
-            if (!DateOnly.TryParse(dateData.ToString(), out var date)) return BadRequest("Invalid date");
+
+            DateOnly date = DateOnly.FromDateTime(dateData);
+
+            //if (!DateOnly.TryParse(dateData.ToString(), out var date)) return BadRequest("Invalid date");
+
 
             try
             {
@@ -49,11 +53,14 @@ namespace SolarWatch.Controllers
         }
 
         [HttpGet("sunset")]
-        public async Task<IActionResult> GetSunset(DateData dateData, string city)
+        public async Task<IActionResult> GetSunset(DateTime dateData, string city)
         {
 
             if (city == null) return BadRequest("invalid city name");
-            if (!DateOnly.TryParse(dateData.ToString(), out var date)) return BadRequest("Invalid date");
+
+            DateOnly date = DateOnly.FromDateTime(dateData);
+
+            //if (!DateOnly.TryParse(dateData.ToString(), out var date)) return BadRequest("Invalid date");
 
             try
             {

@@ -2,7 +2,7 @@
 {
     public interface ISunJsonParser
     {
-        TimeOnly GetSunRise(string sunData);
-        TimeOnly GetSunSet(string sunData);
+        DateTime GetSunRise(string sunData);
+        DateTime GetSunSet(string sunData);
     }
 }
