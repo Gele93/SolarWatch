@@ -2,6 +2,6 @@
 {
     public interface ISunMoveProvider
     {
-        string GetSunMoveData(DateOnly date, float lng, float lat);
+        Task<string> GetSunMoveData(DateOnly date, float lng, float lat);
     }
 }

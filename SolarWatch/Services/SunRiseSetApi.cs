@@ -9,17 +9,18 @@ namespace SolarWatch.Services
         {
             _logger = logger;
         }
-        public string GetSunMoveData(DateOnly date, float lng, float lat)
+        public async Task<string> GetSunMoveData(DateOnly date, float lng, float lat)
         {
             string url = $"https://api.sunrise-sunset.org/json?lat={lat}&lng={lng}&date={date.ToString("yyyy-MM-dd")}";
 
-            using var client = new WebClient();
+            using var client = new HttpClient();
 
             _logger.LogInformation($"Calling sun Api: {url}");
 
             try
             {
-                return client.DownloadString(url);
+                var response = await client.GetAsync(url);
+                return await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {

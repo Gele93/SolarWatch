@@ -26,7 +26,7 @@ namespace SolarWatch.Controllers
         }
 
         [HttpGet("sunrise")]
-        public IActionResult GetSunrise(DateData dateData, string city)
+        public async Task<IActionResult> GetSunrise(DateData dateData, string city)
         {
 
             if (city == null) return BadRequest("invalid city name");
@@ -34,10 +34,10 @@ namespace SolarWatch.Controllers
 
             try
             {
-                var cityData = _cityDataProvider.GetCityData(city);
+                var cityData = await _cityDataProvider.GetCityData(city);
                 var lat = _cityJsonParser.GetLatitude(cityData);
                 var lng = _cityJsonParser.GetLongitude(cityData);
-                var sunData = _moveProvider.GetSunMoveData(date, lng, lat);
+                var sunData = await _moveProvider.GetSunMoveData(date, lng, lat);
                 var sunRise = _sunJsonParser.GetSunRise(sunData);
 
                 return Ok(sunRise);
@@ -49,18 +49,18 @@ namespace SolarWatch.Controllers
         }
 
         [HttpGet("sunset")]
-        public IActionResult GetSunset(DateData dateData, string city)
+        public async Task<IActionResult> GetSunset(DateData dateData, string city)
         {
-           
+
             if (city == null) return BadRequest("invalid city name");
             if (!DateOnly.TryParse(dateData.ToString(), out var date)) return BadRequest("Invalid date");
 
             try
             {
-                var cityData = _cityDataProvider.GetCityData(city);
+                var cityData = await _cityDataProvider.GetCityData(city);
                 var lat = _cityJsonParser.GetLatitude(cityData);
                 var lng = _cityJsonParser.GetLongitude(cityData);
-                var sunData = _moveProvider.GetSunMoveData(date, lng, lat);
+                var sunData = await _moveProvider.GetSunMoveData(date, lng, lat);
                 var sunSet = _sunJsonParser.GetSunSet(sunData);
 
                 return Ok(sunSet);

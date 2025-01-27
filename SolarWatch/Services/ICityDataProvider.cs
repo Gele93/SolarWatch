@@ -2,6 +2,6 @@
 {
     public interface ICityDataProvider
     {
-        public string GetCityData(string city);
+        Task<string> GetCityData(string city);
     }
 }
