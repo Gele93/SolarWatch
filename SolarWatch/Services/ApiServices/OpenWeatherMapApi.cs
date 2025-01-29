@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using System.Net;
 
-namespace SolarWatch.Services
+namespace SolarWatch.Services.ApiServices
 {
     public class OpenWeatherMapApi : ICityDataProvider
     {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace SolarWatch.Services
+namespace SolarWatch.Services.ParseServices
 {
     public class SunJsonParseService : ISunJsonParser
     {
@@ -11,7 +11,7 @@ namespace SolarWatch.Services
             DateTime sunRiseTime = DateTime.Parse(sunRise);
             return sunRiseTime;
         }
-        
+
         public DateTime GetSunSet(string sunData)
         {
             JsonDocument json = JsonDocument.Parse(sunData);

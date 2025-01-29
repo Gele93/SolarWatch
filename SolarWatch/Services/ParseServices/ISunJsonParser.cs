@@ -1,4 +1,4 @@
-﻿namespace SolarWatch.Services
+﻿namespace SolarWatch.Services.ParseServices
 {
     public interface ISunJsonParser
     {
