@@ -1,4 +1,5 @@
 ﻿using SolarWatch.Data.Entities;
+using SolarWatch.Models;
 
 namespace SolarWatch.Services.Repositories
 {
@@ -6,7 +7,7 @@ namespace SolarWatch.Services.Repositories
     {
         Task<List<City>> GetAll();
         Task<City>? Get(string name);
-        Task<int> Add (City city);
+        int Add(City city);
 
     }
 }

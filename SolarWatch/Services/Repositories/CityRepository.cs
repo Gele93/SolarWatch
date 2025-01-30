@@ -1,20 +1,27 @@
 ﻿using SolarWatch.Data.Entities;
+using SolarWatch.Models;
+using SolarWatch.Data.Context;
 
 namespace SolarWatch.Services.Repositories
 {
     public class CityRepository : ICityRepository
     {
-        public async Task<List<City>> GetAll()
+
+        private SolarWatchContext _dbContext;
+
+        public CityRepository(SolarWatchContext dbContext)
         {
-            throw new NotImplementedException();
+            _dbContext = dbContext;
         }
-        public async Task<City>? Get(string name)
+        public async Task<List<City>> GetAll() => _dbContext.Cities
+            .ToList();
+        public async Task<City>? Get(string name) => _dbContext.Cities
+            .FirstOrDefault(c => c.Name == name);
+        public int Add(City city)
         {
-            throw new NotImplementedException();
-        }
-        public async Task<int> Add(City city)
-        {
-            throw new NotImplementedException();
+            _dbContext.Cities.Add(city);
+            _dbContext.SaveChanges();
+            return city.Id;
         }
     }
 }

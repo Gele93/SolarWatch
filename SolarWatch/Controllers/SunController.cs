@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Mvc;
+using SolarWatch.Data.Context;
 using SolarWatch.Models;
 using SolarWatch.Services.ApiServices;
 using SolarWatch.Services.ParseServices;
@@ -40,29 +41,31 @@ namespace SolarWatch.Controllers
         public async Task<IActionResult> GetSunMovement(SunApiDto sunData)
         {
 
-
             if (sunData.City == null) return BadRequest("invalid city name");
 
             DateOnly date = DateOnly.FromDateTime(sunData.Date);
 
-            /*
+            
             if (await _solarService.ExistsInDb(sunData))
             {
                 var sunMovement = await _solarService.GetSunMovement(sunData);
+
+                _logger.LogInformation("Read from local DB");
                 return Ok(new SunMovementDto(sunMovement.Sunset, sunMovement.SunRise));
             }
-            */
+            
             try
-            {
+            { 
                 var cityJson = await _cityDataProvider.GetCityData(sunData.City);
                 var cityData = _cityJsonParser.GetCityData(cityJson);
 
                 var sunMoveJson = await _moveProvider.GetSunMoveData(date, cityData.Longitude, cityData.Latitude);
                 SunMovementDto sunMoveData = new(_sunJsonParser.GetSunRise(sunMoveJson), _sunJsonParser.GetSunSet(sunMoveJson));
 
-                //_solarService.SaveIntoDb(cityData, sunMoveData);
+                _solarService.SaveIntoDb(cityData, sunMoveData, sunData.Date);
 
-                return Ok(sunMoveData);
+                _logger.LogInformation("Read from Sun-Api, saved in local DB");
+                return Ok(sunMoveData); 
             }
             catch (Exception ex)
             {
@@ -70,39 +73,5 @@ namespace SolarWatch.Controllers
             }
         }
 
-        /*
-        [HttpGet("sunset")]
-        public async Task<IActionResult> GetSunset(SunApiDto sunData)
-        {
-
-            if (sunData.City == null) return BadRequest("invalid city name");
-
-            DateOnly date = DateOnly.FromDateTime(sunData.Date);
-
-            if (await _solarService.ExistsInDb(sunData))
-            {
-                var sunRise = await _solarService.GetSunSet(sunData);
-                return Ok(sunData);
-            }
-
-            try
-            {
-                var cityJson = await _cityDataProvider.GetCityData(sunData.City);
-                var cityData = _cityJsonParser.GetCityData(cityJson);
-                var lat = cityData.Latitude;
-                var lng = cityData.Longitude;
-                var sunMoveData = await _moveProvider.GetSunMoveData(date, lng, lat);
-                var sunSet = _sunJsonParser.GetSunSet(sunMoveData);
-
-
-
-                return Ok(sunSet);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-        */
     }
 }

@@ -1,4 +1,5 @@
 ﻿namespace SolarWatch.Models
 {
-    public record SunMovementDto(DateTime SunRise, DateTime SunSet);
+    public record SunMovementDto(string SunRise, string SunSet);
 }
+    

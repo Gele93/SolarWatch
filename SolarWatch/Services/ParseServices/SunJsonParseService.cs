@@ -4,20 +4,20 @@ namespace SolarWatch.Services.ParseServices
 {
     public class SunJsonParseService : ISunJsonParser
     {
-        public DateTime GetSunRise(string sunData)
+        public string GetSunRise(string sunData)
         {
             JsonDocument json = JsonDocument.Parse(sunData);
             var sunRise = json.RootElement.GetProperty("results").GetProperty("sunrise").GetString();
-            DateTime sunRiseTime = DateTime.Parse(sunRise);
-            return sunRiseTime;
+       //     DateTime sunRiseTime = DateTime.Parse(sunRise);
+            return sunRise;
         }
 
-        public DateTime GetSunSet(string sunData)
+        public string GetSunSet(string sunData)
         {
             JsonDocument json = JsonDocument.Parse(sunData);
             var sunRise = json.RootElement.GetProperty("results").GetProperty("sunset").GetString();
-            DateTime sunRiseTime = DateTime.Parse(sunRise);
-            return sunRiseTime;
+            //DateTime sunRiseTime = DateTime.Parse(sunRise);
+            return sunRise;
         }
     }
 }

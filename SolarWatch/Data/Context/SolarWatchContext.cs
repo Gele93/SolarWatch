@@ -9,7 +9,6 @@ namespace SolarWatch.Data.Context
         public DbSet<City> Cities { get; set; }
         public DbSet<SunMovement> SunMovements { get; set; }
 
-
         public SolarWatchContext(DbContextOptions<SolarWatchContext> options) : base(options)
         {
         }

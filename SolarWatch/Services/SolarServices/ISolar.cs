@@ -7,6 +7,6 @@ namespace SolarWatch.Services.SolarServices
     {
         Task<bool> ExistsInDb(SunApiDto sunData);
         Task<SunMovement> GetSunMovement(SunApiDto sunData);
-        void SaveIntoDb(CityApiDto cityData, SunMovementDto sunMoveData);
+        Task SaveIntoDb(CityApiDto cityData, SunMovementDto sunMoveData, DateTime date);
     }
 }
