@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SolarWatch.Controllers;
 using SolarWatch.Data.Context;
 using SolarWatch.Data.Entities;
 using SolarWatch.Models;
@@ -11,11 +12,13 @@ namespace SolarWatch.Services.SolarServices
     {
         private SolarWatchContext _dbContext;
 
+        private readonly ILogger<SolarService> _logger;
         private readonly ICityRepository _cityRepo;
         private readonly ISunMovementRepository _sunRepo;
-        public SolarService(ICityRepository cityRepository, ISunMovementRepository sunMovementRepository, SolarWatchContext dbContext)
+        public SolarService(ICityRepository cityRepository, ISunMovementRepository sunMovementRepository, SolarWatchContext dbContext, ILogger<SolarService> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
             _cityRepo = cityRepository;
             _sunRepo = sunMovementRepository;
         }
@@ -52,22 +55,30 @@ namespace SolarWatch.Services.SolarServices
 
         public async Task SaveIntoDb(CityApiDto cityData, SunMovementDto sunMoveData, DateTime date)
         {
-            City? city = await _cityRepo.Get(cityData.Name);
-
-            int cityId = 0;
-
-            if (city is null)
+            try
             {
-                cityId = _cityRepo.Add(new City(cityData.Name, cityData.Longitude, cityData.Latitude, cityData.Country, cityData.State));
-            }
-            else
+
+                City? city = await _cityRepo.Get(cityData.Name);
+
+                int cityId = 0;
+
+                if (city is null)
+                {
+                    cityId = await _cityRepo.Add(new City(cityData.Name, cityData.Longitude, cityData.Latitude, cityData.Country, cityData.State));
+                }
+                else
+                {
+                    cityId = city.Id;
+                }
+
+                SunMovement sunMoveDataToAdd = new(cityId, date, sunMoveData.SunRise, sunMoveData.SunSet);
+
+                _sunRepo.Add(sunMoveDataToAdd);
+
+            } catch (Exception ex)
             {
-                cityId = city.Id;
+                _logger.LogError($"Error while trying to write local DB: {ex.Message}");
             }
-
-            SunMovement sunMoveDataToAdd = new(cityId, date, sunMoveData.SunRise, sunMoveData.SunSet);
-
-            await _sunRepo.Add(sunMoveDataToAdd);
 
         }
 

@@ -1,0 +1,1 @@
+docker run -d -p 8080:80 --name solarwatch --network solarwatch-net -e SolarWatch_connection="Server=relaxed_chatelet,1433;Database=SolarWatch;User Id=sa;Password=yourStrong(!)Password;Encrypt=false;" solarwatch

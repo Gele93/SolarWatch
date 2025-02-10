@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarWatch", "SolarWatch\SolarWatch.csproj", "{D7CBFB8D-C80F-4CC1-BA56-DE729213460A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolarWatch", "SolarWatch\SolarWatch.csproj", "{D7CBFB8D-C80F-4CC1-BA56-DE729213460A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarWatchTest", "D:\Gele\Codecool\projects\ASP.NET\SW1 - Web Applications in ASP.NET Core\Solar watch - MVP\SolarWatchTest\SolarWatchTest.csproj", "{C4BF8CED-689F-4E92-B770-96823D847476}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarTest", "SolarTest\SolarTest.csproj", "{04B00F2A-E3F0-491D-8D29-B9E639A6D36B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{D7CBFB8D-C80F-4CC1-BA56-DE729213460A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7CBFB8D-C80F-4CC1-BA56-DE729213460A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7CBFB8D-C80F-4CC1-BA56-DE729213460A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C4BF8CED-689F-4E92-B770-96823D847476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C4BF8CED-689F-4E92-B770-96823D847476}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C4BF8CED-689F-4E92-B770-96823D847476}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C4BF8CED-689F-4E92-B770-96823D847476}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04B00F2A-E3F0-491D-8D29-B9E639A6D36B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04B00F2A-E3F0-491D-8D29-B9E639A6D36B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04B00F2A-E3F0-491D-8D29-B9E639A6D36B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04B00F2A-E3F0-491D-8D29-B9E639A6D36B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

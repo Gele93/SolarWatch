@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SolarWatch.Data.Entities;
 using System.Diagnostics.Metrics;
 
 namespace SolarWatch.Data.Context
 {
-    public class SolarWatchContext : DbContext
+    public class SolarWatchContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<City> Cities { get; set; }
         public DbSet<SunMovement> SunMovements { get; set; }
@@ -13,11 +15,5 @@ namespace SolarWatch.Data.Context
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.Entity<City>()
-                .HasIndex(u => u.Name)
-                .IsUnique();
-        }
     }
 }

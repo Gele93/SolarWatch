@@ -12,7 +12,6 @@ namespace SolarWatch.Services.ParseServices
             var lat = json.RootElement[0].GetProperty("lat").GetSingle();
             var name = json.RootElement[0].GetProperty("name").GetString();
             var country = json.RootElement[0].GetProperty("country").GetString();
-            // var state = json.RootElement[0].GetProperty("state").GetString();
 
             string? state = null;
 

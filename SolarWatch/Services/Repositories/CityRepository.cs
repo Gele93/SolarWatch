@@ -1,6 +1,7 @@
 ﻿using SolarWatch.Data.Entities;
 using SolarWatch.Models;
 using SolarWatch.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace SolarWatch.Services.Repositories
 {
@@ -17,10 +18,10 @@ namespace SolarWatch.Services.Repositories
             .ToList();
         public async Task<City>? Get(string name) => _dbContext.Cities
             .FirstOrDefault(c => c.Name == name);
-        public int Add(City city)
+        public async Task<int> Add(City city)
         {
-            _dbContext.Cities.Add(city);
-            _dbContext.SaveChanges();
+            await _dbContext.Cities.AddAsync(city);
+            await _dbContext.SaveChangesAsync();
             return city.Id;
         }
     }

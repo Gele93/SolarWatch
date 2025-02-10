@@ -7,7 +7,7 @@ namespace SolarWatch.Services.Repositories
     {
         Task<List<City>> GetAll();
         Task<City>? Get(string name);
-        int Add(City city);
+        Task<int> Add(City city);
 
     }
 }

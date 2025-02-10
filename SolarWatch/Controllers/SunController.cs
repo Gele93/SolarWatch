@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Connections.Features;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Mvc;
 using SolarWatch.Data.Context;
 using SolarWatch.Models;
@@ -37,7 +38,7 @@ namespace SolarWatch.Controllers
             _solarService = solarService;
         }
 
-        [HttpGet("sunmovement")]
+        [HttpGet("sunmovement"), Authorize]
         public async Task<IActionResult> GetSunMovement(SunApiDto sunData)
         {
 
@@ -45,7 +46,7 @@ namespace SolarWatch.Controllers
 
             DateOnly date = DateOnly.FromDateTime(sunData.Date);
 
-            
+
             if (await _solarService.ExistsInDb(sunData))
             {
                 var sunMovement = await _solarService.GetSunMovement(sunData);
@@ -53,19 +54,19 @@ namespace SolarWatch.Controllers
                 _logger.LogInformation("Read from local DB");
                 return Ok(new SunMovementDto(sunMovement.Sunset, sunMovement.SunRise));
             }
-            
+
             try
-            { 
+            {
                 var cityJson = await _cityDataProvider.GetCityData(sunData.City);
                 var cityData = _cityJsonParser.GetCityData(cityJson);
 
                 var sunMoveJson = await _moveProvider.GetSunMoveData(date, cityData.Longitude, cityData.Latitude);
                 SunMovementDto sunMoveData = new(_sunJsonParser.GetSunRise(sunMoveJson), _sunJsonParser.GetSunSet(sunMoveJson));
 
-                _solarService.SaveIntoDb(cityData, sunMoveData, sunData.Date);
+                await _solarService.SaveIntoDb(cityData, sunMoveData, sunData.Date);
 
                 _logger.LogInformation("Read from Sun-Api, saved in local DB");
-                return Ok(sunMoveData); 
+                return Ok(sunMoveData);
             }
             catch (Exception ex)
             {

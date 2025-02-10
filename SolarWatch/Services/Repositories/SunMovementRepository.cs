@@ -20,10 +20,10 @@ namespace SolarWatch.Services.Repositories
         public async Task<SunMovement>? GetByCityDate(int cityId, DateTime date) => _dbContext.SunMovements
             .Where(sm => sm.CityId == cityId)
             .FirstOrDefault(sm => sm.Date == date);
-        public async Task Add(SunMovement sunMovementData)
+        public void Add(SunMovement sunMovementData)
         {
             _dbContext.SunMovements.Add(sunMovementData);
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChangesAsync();
         }
     }
 }

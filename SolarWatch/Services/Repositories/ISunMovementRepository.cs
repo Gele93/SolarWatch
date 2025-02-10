@@ -7,7 +7,7 @@ namespace SolarWatch.Services.Repositories
     {
         Task<List<SunMovement>> GetAllByCity(int cityId);
         Task<SunMovement>? GetByCityDate(int cityId, DateTime date);
-        Task Add(SunMovement sunMovementData);
+        void Add(SunMovement sunMovementData);
 
     }
 }
