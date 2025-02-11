@@ -13,8 +13,6 @@ namespace SolarWatch.Controllers
     [Route("[controller]")]
     public class SunController : ControllerBase
     {
-
-
         private readonly ILogger<SunController> _logger;
         private ICityDataProvider _cityDataProvider;
         private ICityJsonParser _cityJsonParser;

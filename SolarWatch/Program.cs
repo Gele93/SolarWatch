@@ -9,6 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SolarWatch.Services.AuthServices;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
+using SolarWatch.Data.Seeder;
 
 namespace SolarWatch
 {
@@ -20,6 +23,7 @@ namespace SolarWatch
             var configuration = builder.Configuration;
 
             AddServices(builder);
+            ConfigureSwagger(builder);
             AddDbContext(builder);
             AddAuthentication(builder, configuration);
             AddIdentity(builder);
@@ -27,6 +31,10 @@ namespace SolarWatch
 
             var app = builder.Build();
 
+            using var scope = app.Services.CreateScope();
+            var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+            authenticationSeeder.AddRoles();
+            authenticationSeeder.AddAdmin();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -56,11 +64,49 @@ namespace SolarWatch
             builder.Services.AddScoped<ISunMovementRepository, SunMovementRepository>();
             builder.Services.AddScoped<ISolar, SolarService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<AuthenticationSeeder>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
         }
+        private static void ConfigureSwagger (WebApplicationBuilder builder)
+        {
+            builder.Services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Demo API",
+                    Version = "v1"
+                });
 
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+            });
+
+        }
         private static void AddDbContext(WebApplicationBuilder builder)
         {
             builder.Services.AddDbContext<SolarWatchContext>(options =>
@@ -113,6 +159,7 @@ namespace SolarWatch
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
     })
+    .AddRoles<IdentityRole>() //Enable Identity roles 
     .AddEntityFrameworkStores<SolarWatchContext>();
 
 

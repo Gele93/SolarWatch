@@ -6,7 +6,7 @@ using System.Diagnostics.Metrics;
 
 namespace SolarWatch.Data.Context
 {
-    public class SolarWatchContext : IdentityDbContext<IdentityUser>
+    public class SolarWatchContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public DbSet<City> Cities { get; set; }
         public DbSet<SunMovement> SunMovements { get; set; }
