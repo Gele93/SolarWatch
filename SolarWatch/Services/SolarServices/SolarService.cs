@@ -73,7 +73,7 @@ namespace SolarWatch.Services.SolarServices
 
                 SunMovement sunMoveDataToAdd = new(cityId, date, sunMoveData.SunRise, sunMoveData.SunSet);
 
-                _sunRepo.Add(sunMoveDataToAdd);
+                await _sunRepo.Add(sunMoveDataToAdd);
 
             } catch (Exception ex)
             {

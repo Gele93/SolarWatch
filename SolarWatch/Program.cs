@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using SolarWatch.Data.Seeder;
+using SolarWatch.Services.CityServices;
+using SolarWatch.Services.SunMovementServices;
 
 namespace SolarWatch
 {
@@ -26,6 +28,7 @@ namespace SolarWatch
             ConfigureSwagger(builder);
             AddDbContext(builder);
             AddAuthentication(builder, configuration);
+            AddAuthorizationPolicies(builder, configuration);
             AddIdentity(builder);
 
 
@@ -65,12 +68,14 @@ namespace SolarWatch
             builder.Services.AddScoped<ISolar, SolarService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<ICityService, CityServices>();
+            builder.Services.AddScoped<ISunMovementService, SunMovementService>();
             builder.Services.AddScoped<AuthenticationSeeder>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
         }
-        private static void ConfigureSwagger (WebApplicationBuilder builder)
+        private static void ConfigureSwagger(WebApplicationBuilder builder)
         {
             builder.Services.AddSwaggerGen(option =>
             {
@@ -145,6 +150,17 @@ namespace SolarWatch
             ),
         };
     });
+        }
+
+        private static void AddAuthorizationPolicies(WebApplicationBuilder builder, ConfigurationManager configuration)
+        {
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireUserOrAdmin", policy =>
+                    policy.RequireRole(configuration["Roles:User"], configuration["Roles:Admin"]));
+                options.AddPolicy("RequireAdmin", policy =>
+                    policy.RequireRole(configuration["Roles:Admin"]));
+            });
         }
         private static void AddIdentity(WebApplicationBuilder builder)
         {

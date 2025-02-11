@@ -18,11 +18,28 @@ namespace SolarWatch.Services.Repositories
             .ToList();
         public async Task<City>? Get(string name) => _dbContext.Cities
             .FirstOrDefault(c => c.Name == name);
+        public async Task<City>? Get(int cityId) => _dbContext.Cities
+    .FirstOrDefault(c => c.Id == cityId);
         public async Task<int> Add(City city)
         {
             await _dbContext.Cities.AddAsync(city);
             await _dbContext.SaveChangesAsync();
             return city.Id;
+        }
+
+
+        public async Task<City> Edit(City city)
+        {
+            _dbContext.Cities.Update(city);
+            await _dbContext.SaveChangesAsync();
+            return city;
+
+        }
+        public async Task<bool> Delete(City city)
+        {
+            _dbContext.Cities.Remove(city);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 }

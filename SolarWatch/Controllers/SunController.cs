@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Connections.Features;
-using Microsoft.AspNetCore.Mvc;
-using SolarWatch.Data.Context;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SolarWatch.Models;
 using SolarWatch.Services.ApiServices;
+using SolarWatch.Services.CityServices;
 using SolarWatch.Services.ParseServices;
 using SolarWatch.Services.SolarServices;
 
@@ -20,13 +19,15 @@ namespace SolarWatch.Controllers
         private ISunJsonParser _sunJsonParser;
         private ISolar _solarService;
 
+
         public SunController(
             ILogger<SunController> logger,
             ICityDataProvider cityDataProvider,
             ICityJsonParser cityJsonParser,
             ISunMoveProvider moveProvider,
             ISunJsonParser sunJsonParser,
-            ISolar solarService)
+            ISolar solarService
+            )
         {
             _logger = logger;
             _cityDataProvider = cityDataProvider;
@@ -36,7 +37,7 @@ namespace SolarWatch.Controllers
             _solarService = solarService;
         }
 
-        [HttpGet("sunmovement"), Authorize]
+        [HttpGet(), Authorize(Policy = "RequireUserOrAdmin")]
         public async Task<IActionResult> GetSunMovement(SunApiDto sunData)
         {
 
