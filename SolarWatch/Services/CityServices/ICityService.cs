@@ -8,5 +8,6 @@ namespace SolarWatch.Services.CityServices
         Task<int> CreateCity(CityApiDto cityData);
         Task<City> EditCity(CityApiDto cityData, int cityId);
         Task<bool> RemoveCity(int cityId);
+        Task<List<City>> GetAllCities();
     }
 }

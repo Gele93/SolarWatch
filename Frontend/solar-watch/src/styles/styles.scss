@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Inter:wght@100..900&family=League+Spartan:wght@100..900&family=Permanent+Marker&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet');
+@import "../styles/landing/landing.scss";
+@import "../styles/sun/sun.scss";
+@import "./variables.scss";
+@import "./header.scss";
+@import "./edit-data/edit-data.scss";
+
+body {
+    color: $text;
+  background-color: $background;
+  font-family: "Poppins", serif;
+}
+
+button {
+  z-index: 2;
+  color: $text;
+  border-radius: 20px;
+  width:10vw;
+  height: 4vh;
+  background-color: $background-ocp;
+  transition: background-color 3s, color 3s;
+}
+button:hover {
+  color: $accent;
+}
+button.active {
+  background-color: $highlight;
+  color: $background
+}
+
+
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-size: 16px; /* Ensures predictable `rem` values */
+    line-height: 1;
+  }
+  
+  img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+  }
+  
+  textarea, select {
+    font: inherit;
+    border: none;
+    outline: none;
+    background: none;
+    option {
+      background: none;
+      background-color: $primary;
+    }
+  }
+  button {
+    font: inherit;
+    border: none;
+    outline: none;
+  }
+  input {
+    font: inherit;
+    color: $text
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  ul, ol {
+    list-style: none;
+  }
+  
+  button {
+    cursor: pointer;
+  }
+  
+
+
+
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  background-color: #8d847f;
+  border-radius: 50%;
+  animation: l4 3s infinite;
+}
+@keyframes l4 {
+  12.5% {background-image:radial-gradient(80% 65% at left, #0000 94%,#fff9)}
+  25%   {background-image:linear-gradient(90deg,#0000 50%,#fff9 0)}
+  37.5% {background-image:radial-gradient(80% 65% at right,#fff9 94%,#0000)}
+  50%   {background-image:linear-gradient(#fff9 0 0)}
+  62.5% {background-image:radial-gradient(80% 65% at left, #fff9 94%,#0000)}
+  75%   {background-image:linear-gradient(-90deg,#0000 50%,#fff9 0)}
+  87.5% {background-image:radial-gradient(80% 65% at right,#0000 94%,#fff9)}
+}

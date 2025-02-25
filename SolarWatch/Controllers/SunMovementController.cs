@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SolarWatch.Models;
 using SolarWatch.Services.CityServices;
 using SolarWatch.Services.SunMovementServices;
+using System;
 
 namespace SolarWatch.Controllers
 {
@@ -19,7 +20,7 @@ namespace SolarWatch.Controllers
             _sunMovementService = sunMovementService;
         }
 
-        [HttpPost("sunmove"), Authorize(Policy = "RequireAdmin")]
+        [HttpPost(), Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> CreateSunMove(SunMovementToCityDto sunData)
         {
             try
@@ -34,8 +35,8 @@ namespace SolarWatch.Controllers
             }
         }
 
-        [HttpPut("sunmove/{cityId}/{date}"), Authorize(Policy = "RequireAdmin")]
-        public async Task<IActionResult> EditCity(SunMovementDto sunData, int cityId, DateTime date)
+        [HttpPut("{cityId}/{date}"), Authorize(Policy = "RequireAdmin")]
+        public async Task<IActionResult> EditSunMove([FromBody]SunMovementDto sunData, int cityId, DateTime date)
         {
             try
             {
@@ -49,8 +50,8 @@ namespace SolarWatch.Controllers
             }
         }
 
-        [HttpDelete("sunmove/{sunId}"), Authorize(Policy = "RequireAdmin")]
-        public async Task<IActionResult> RemoveCity(int sunId)
+        [HttpDelete("{sunId}"), Authorize(Policy = "RequireAdmin")]
+        public async Task<IActionResult> RemoveSunMove(int sunId)
         {
             try
             {
@@ -63,5 +64,21 @@ namespace SolarWatch.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet("{cityName}"), Authorize(Policy = "RequireAdmin")]
+        public async Task<IActionResult> GetAllSunMove(string cityName)
+        {
+            try
+            {
+                var sunMovements = await _sunMovementService.GetAllByCity(cityName);
+                return Ok(sunMovements);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 }

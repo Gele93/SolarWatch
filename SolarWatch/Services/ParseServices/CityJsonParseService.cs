@@ -19,7 +19,7 @@ namespace SolarWatch.Services.ParseServices
             {
                 state = stateElement.GetString();
             }
-
+             
             return new CityApiDto(name, lng, lat, country, state);
 
         }

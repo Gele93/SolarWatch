@@ -1,0 +1,124 @@
+.edit-data-container {
+    height: 80vh;
+    display: grid ;
+    grid-template-areas:
+    "buttons"
+    "form";
+    grid-template-rows: 10vh 70vh;
+
+    .edit-type-buttons {
+        grid-area: "buttons";
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    .edit-form {
+        z-index: 1;
+        justify-self: center;
+        grid-area: "form";
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+        height: 60vh;
+        overflow: auto;
+
+        .row{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            margin-bottom: 1vh;
+
+            .inputs {
+                display: flex;
+                flex-direction: row;
+                gap:0.4vw;
+                
+                input {                    
+                    background: $background-ocp;
+                    color: $text;
+                    width: 8vw;
+                    text-align: center;
+                    transition: color 0.1s;
+                }
+            }
+            button {
+                transition: none;
+            }
+            button:hover {
+                background-color: $primary;
+                color: $accent;
+            }
+
+        }
+
+        .row:hover {
+            input {
+                background-color: $primary;
+                color: $accent;
+            }
+        }
+    }
+}
+
+.edit-form::-webkit-scrollbar {
+    width: 8px;
+    background-color: $background-ocp;
+  }
+  
+  .edit-form::-webkit-scrollbar-thumb {
+    background-color: $primary; 
+    border-radius: 4px;
+    border: 1px solid $background-ocp; 
+  }
+
+.sun-form {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    .filter-row {
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        justify-content:space-evenly;
+        align-items: center;
+        margin-bottom: 2vh;
+        input {
+            background-color: $background-ocp;
+        }
+        button {
+            transition: none;
+        }
+        button:hover {
+            background-color: $primary;
+            color: $accent;
+        }
+    }
+.row {
+    width: 80%;
+
+    .inputs {
+        display: flex;
+        flex-direction: row;
+        gap:0.4vw;
+        
+        input {                    
+            background: $background-ocp;
+            color: $text;
+            width: 8vw;
+            text-align: center;
+            transition: color 0.1s;
+        }
+    }
+    button {
+        transition: none;
+    }
+    button:hover {
+        background-color: $primary;
+        color: $accent;
+    }
+}
+}
+

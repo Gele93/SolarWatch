@@ -21,7 +21,7 @@ namespace SolarWatch.Controllers
             _cityService = cityService;
         }
 
-        [HttpPost("cities"), Authorize(Policy = "RequireAdmin")]
+        [HttpPost(), Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> CreateCity(CityApiDto cityData)
         {
             try
@@ -36,9 +36,11 @@ namespace SolarWatch.Controllers
             }
         }
 
-        [HttpPut("cities/{cityId}"), Authorize(Policy = "RequireAdmin")]
-        public async Task<IActionResult> EditCity(CityApiDto cityData, int cityId)
+        [HttpPut("{cityId}"), Authorize(Policy = "RequireAdmin")]
+        public async Task<IActionResult> EditCity([FromBody]CityApiDto cityData, int cityId)
         {
+            _logger.LogInformation($"Received cityData: {cityData}");
+
             try
             {
                 var city = await _cityService.EditCity(cityData, cityId);
@@ -51,13 +53,28 @@ namespace SolarWatch.Controllers
             }
         }
 
-        [HttpDelete("cities/{cityId}"), Authorize(Policy = "RequireAdmin")]
+        [HttpDelete("{cityId}"), Authorize(Policy = "RequireAdmin")]
         public async Task<IActionResult> RemoveCity(int cityId)
         {
             try
             {
                 var isDeleted = await _cityService.RemoveCity(cityId);
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet, Authorize(Policy = "RequireAdmin")]
+        public async Task<IActionResult> GetAllCity()
+        {
+            try
+            {
+                var cities = await _cityService.GetAllCities();
+                return Ok(cities);
             }
             catch (Exception e)
             {

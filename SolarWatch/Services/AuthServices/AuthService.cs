@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Azure;
+using Microsoft.AspNetCore.Identity;
 using SolarWatch.Contracts;
 
 namespace SolarWatch.Services.AuthServices
@@ -50,7 +51,6 @@ namespace SolarWatch.Services.AuthServices
             var validResultUser = new AuthResult(true, user.Email, user.UserName, token);
             return validResultUser;
         }
-
 
         private AuthResult FailedRegistration(IdentityUser user, IdentityResult result)
         {

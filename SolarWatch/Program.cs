@@ -14,6 +14,8 @@ using Microsoft.OpenApi.Models;
 using SolarWatch.Data.Seeder;
 using SolarWatch.Services.CityServices;
 using SolarWatch.Services.SunMovementServices;
+using SolarWatch.Data.DataImport;
+using SolarWatch.Services.CityNameServices;
 
 namespace SolarWatch
 {
@@ -26,11 +28,10 @@ namespace SolarWatch
 
             AddServices(builder);
             ConfigureSwagger(builder);
-            AddDbContext(builder);
+            AddDbContext(builder, configuration);
             AddAuthentication(builder, configuration);
             AddAuthorizationPolicies(builder, configuration);
             AddIdentity(builder);
-
 
             var app = builder.Build();
 
@@ -70,6 +71,8 @@ namespace SolarWatch
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<ICityService, CityServices>();
             builder.Services.AddScoped<ISunMovementService, SunMovementService>();
+            builder.Services.AddScoped<ICityNameRepository, CityNameRepository>();
+            builder.Services.AddScoped<ICityNameService, CityNameService>(); 
             builder.Services.AddScoped<AuthenticationSeeder>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -112,11 +115,11 @@ namespace SolarWatch
             });
 
         }
-        private static void AddDbContext(WebApplicationBuilder builder)
+        private static void AddDbContext(WebApplicationBuilder builder, ConfigurationManager configuration)
         {
             builder.Services.AddDbContext<SolarWatchContext>(options =>
             {
-                var connectionString = Environment.GetEnvironmentVariable("SolarWatch_connection");
+                var connectionString = configuration["SolarWatch_connection"];
                 if (string.IsNullOrEmpty(connectionString))
                 {
                     throw new InvalidOperationException("Connection string not found.");
@@ -132,12 +135,17 @@ namespace SolarWatch
             var audience = configuration["JwtSettings:Audience"];
             var secretKey = configuration["JwtSettings:SecretKey"];
 
+            if (string.IsNullOrEmpty(secretKey))
+            {
+                throw new InvalidOperationException("JWT SecretKey is missing.");
+            }
+
             builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
             ClockSkew = TimeSpan.Zero,
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -147,9 +155,9 @@ namespace SolarWatch
             ValidAudience = audience,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(secretKey)
-            ),
-        };
-    });
+                ),
+              };
+             });
         }
 
         private static void AddAuthorizationPolicies(WebApplicationBuilder builder, ConfigurationManager configuration)

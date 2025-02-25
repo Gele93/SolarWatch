@@ -1,0 +1,134 @@
+@import "../variables.scss";
+
+//LANDING-PAGE
+.landing-page {
+    display: grid;
+    grid-template-areas: 
+    "header"
+    "user-panel";
+    grid-template-rows: 15vh 85vh;
+    grid-template-columns: 100vw;
+    height: 100vh;
+    width: 100vw;
+
+    background: radial-gradient(circle at 50% center, #feac14b7 20%, #0f0813 70%);
+    background-size: 200%;
+    background-position: 100% center;
+    transition: background-position 3s;
+    
+    &.right {
+        background-position: 0% center;
+    }
+
+button {
+    &.login {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+    &.reg {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+}
+
+
+
+    .header {
+        grid-area: "header";
+        justify-content: center;
+        width: 100vw;
+        display: flex;
+        flex-direction: row;
+        border-bottom: 1px solid $background;
+        align-items: end;
+        .title{
+            color: $background;
+            position: relative;
+            top:0.5rem;
+            width: fit-content;
+            font-weight: 200;
+            font-size: 4rem;
+            letter-spacing: 0.7rem;
+            text-shadow: 25px -3px 15px $highlight;
+            transition: text-shadow 3s;
+         
+            &.right {
+                text-shadow: -25px -3px 15px $highlight;
+            }
+        }
+    }
+
+        .user-container {
+            z-index: 1;
+            grid-area: "user-panel";
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            height: 100%;
+
+
+            .user-panel {
+                height: 40vh;
+                width: 40vw;
+                display: grid;
+                align-items: center;
+                justify-content: center;
+                grid-template-rows: 5vh 25vh 5vh 5vh;
+                background-color: $background-ocp;
+                border-radius: 100px;
+ //               border: 0.01rem solid $primary;
+
+ .login-register{
+    grid-row: 1;
+    display: flex;
+    flex-direction:row ;
+    justify-content: space-evenly;
+    width: 20rem;
+    height: 2rem;
+}
+
+                .login-container{
+                    grid-row: 2;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    height: inherit;
+                    form {
+                        position: relative;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2vh;
+                        .row {
+                            display: flex;
+                            width: 18vw;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: space-between;
+                            &.center {
+                                justify-content: center;
+                            }
+                            input {
+                                background: $background-ocp;
+                                width: 10vw;
+                            }
+                        }
+                    }
+                }
+
+                .button-container {
+                    grid-row: 4;
+                    justify-self: center;
+                }
+                .message {
+                    justify-self: center;
+                    color: $highlight;
+                }
+                &.error {
+                    color: $accent;
+                }
+            }
+        }
+}
+
+

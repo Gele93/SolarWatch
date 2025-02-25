@@ -51,7 +51,7 @@ namespace SolarWatch.Controllers
                 return BadRequest(ModelState);
             }
 
-            return CreatedAtAction(nameof(Authenticate), new AuthResponse(result.Username, result.Email, result.Token));
+            return Ok( new AuthResponse(result.Username, result.Email, result.Token));
         }
 
 
@@ -61,6 +61,18 @@ namespace SolarWatch.Controllers
             {
                 ModelState.AddModelError(error.Key, error.Value);
             }
+        }
+
+        private void SetJwtCookie(string token)
+        {
+            var options = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddMinutes(60)
+            };
+            Response.Cookies.Append("JwtToken", token, options);
         }
     }
 }

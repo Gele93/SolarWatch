@@ -7,10 +7,12 @@ namespace SolarWatch.Services.SunMovementServices
     public class SunMovementService : ISunMovementService
     {
         private readonly ISunMovementRepository _sunMovementRepo;
+        private readonly ICityRepository _cityRepository;
 
-        public SunMovementService(ISunMovementRepository sunMovementRepo)
+        public SunMovementService(ISunMovementRepository sunMovementRepo, ICityRepository cityRepository)
         {
             _sunMovementRepo = sunMovementRepo;
+            _cityRepository = cityRepository;
         }
 
         public async Task<int> CreateSunMovement(SunMovementToCityDto sunData)
@@ -58,6 +60,19 @@ namespace SolarWatch.Services.SunMovementServices
 
             var result = await _sunMovementRepo.Delete(sunMoveToDelete);
             return result;
+        }
+
+        public async Task<List<SunMovement>> GetAllByCity(string cityName)
+        {
+            var city = await _cityRepository.Get(cityName);
+
+            if (city is null) throw new Exception($"{cityName} was not found");
+
+            var cityId = city.Id;
+
+            var sunMovements = await _sunMovementRepo.GetAllByCity(cityId);
+
+            return sunMovements;
         }
 
     }

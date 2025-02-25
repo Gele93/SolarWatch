@@ -57,6 +57,11 @@ namespace SolarWatch.Services.CityServices
 
             return result;
         }
+        public async Task<List<City>> GetAllCities()
+        {
+            var cities = await _cityRepo.GetAll();
+            return cities;   
+        }
 
     }
 }
