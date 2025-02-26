@@ -65,7 +65,7 @@ namespace SolarWatch.Services.AuthServices
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
+                throw new Exception("Creating claims failed");
             }
         }
 

@@ -17,6 +17,8 @@ namespace SolarWatch.Services.ApiServices
 
             _logger.LogInformation($"Calling sun Api: {url}");
 
+            if (date == DateOnly.FromDateTime(DateTime.Parse("0001-01-01"))) throw new Exception("Invalid date");
+
             try
             {
                 var response = await client.GetAsync(url);

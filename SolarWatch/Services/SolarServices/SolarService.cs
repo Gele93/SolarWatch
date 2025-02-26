@@ -10,14 +10,14 @@ namespace SolarWatch.Services.SolarServices
 {
     public class SolarService : ISolar
     {
-        private SolarWatchContext _dbContext;
+     //   private SolarWatchContext _dbContext;
 
         private readonly ILogger<SolarService> _logger;
         private readonly ICityRepository _cityRepo;
         private readonly ISunMovementRepository _sunRepo;
-        public SolarService(ICityRepository cityRepository, ISunMovementRepository sunMovementRepository, SolarWatchContext dbContext, ILogger<SolarService> logger)
+        public SolarService(ICityRepository cityRepository, ISunMovementRepository sunMovementRepository, ILogger<SolarService> logger)
         {
-            _dbContext = dbContext;
+       //     _dbContext = dbContext;
             _logger = logger;
             _cityRepo = cityRepository;
             _sunRepo = sunMovementRepository;
@@ -49,7 +49,6 @@ namespace SolarWatch.Services.SolarServices
             var sunMove = await _sunRepo.GetByCityDate(cityId, sunData.Date);
 
             return sunMove;
-
         }
 
 
@@ -57,7 +56,6 @@ namespace SolarWatch.Services.SolarServices
         {
             try
             {
-
                 City? city = await _cityRepo.Get(cityData.Name);
 
                 int cityId = 0;
@@ -78,8 +76,8 @@ namespace SolarWatch.Services.SolarServices
             } catch (Exception ex)
             {
                 _logger.LogError($"Error while trying to write local DB: {ex.Message}");
+                throw new Exception("Saving failed");
             }
-
         }
 
     }

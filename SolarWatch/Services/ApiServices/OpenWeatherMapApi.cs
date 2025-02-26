@@ -21,13 +21,22 @@ namespace SolarWatch.Services.ApiServices
 
             _logger.LogInformation($"Calling {url}");
 
-            var response = await client.GetAsync(url);
-            var cityData = await response.Content.ReadAsStringAsync();
+            string cityData = String.Empty;
 
-            if (cityData == "[]") throw new Exception($"Could not download city data: {url}");
+            try
+            {
+                var response = await client.GetAsync(url);
+                cityData = await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw new Exception($"Could not download city data: {url}");
+            }
+
+            if (cityData == "[]" || String.IsNullOrEmpty(cityData)) throw new Exception($"Could not download city data: {url}");
 
             return cityData;
-
         }
     }
 }
