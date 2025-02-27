@@ -56,9 +56,10 @@ namespace SolarWatch
             app.MapControllers();
 
             app.Run();
-        }
+    }
 
-        private static void AddServices(WebApplicationBuilder builder)
+
+    private static void AddServices(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<ICityDataProvider, OpenWeatherMapApi>();
             builder.Services.AddScoped<ICityJsonParser, CityJsonParseService>();
@@ -191,3 +192,4 @@ namespace SolarWatch
 
     }
 }
+public partial class Program { }
