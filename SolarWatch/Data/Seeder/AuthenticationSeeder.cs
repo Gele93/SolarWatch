@@ -16,8 +16,8 @@ namespace SolarWatch.Data.Seeder
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
-            _adminRole = configuration["Roles:Admin"];
-            _userRole = configuration["Roles:User"];
+            _adminRole = configuration.GetValue<string>("Roles:Admin") ?? "Admin";
+            _userRole = configuration.GetValue<string>("Roles:User") ?? "User";
         }
         public void AddRoles()
         {
