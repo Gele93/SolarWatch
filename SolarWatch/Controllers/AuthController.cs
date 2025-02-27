@@ -12,7 +12,7 @@ namespace SolarWatch.Controllers
         public AuthController(IAuthService authService, IConfiguration configuration)
         {
             _authService = authService;
-            _userRole = configuration["Roles:User"];
+            _userRole = configuration.GetValue<string>("Roles:User") ?? "User";
         }
 
         [HttpPost("register")]
