@@ -1,32 +1,27 @@
-# Dockerfile
+# Build Stage
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
 COPY *.csproj ./
 RUN dotnet restore
 
-
-# Copy everything else and build
-COPY . ./
+COPY . . 
 RUN dotnet publish -c Release -o out
 
-# Build runtime image
+RUN apt-get update && apt-get install -y wait-for-it
+
+# Run database migration in the build stage
+RUN dotnet tool install --global dotnet-ef --version 7.0.20
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
+
 COPY --from=build-env /app/out .
 
-# Create the directory in the container
 RUN mkdir -p /app/city-raw-data
-
-# Copy the CSV file into the directory
 COPY city-raw-data/citynames.csv /app/city-raw-data/citynames.csv
 
-# Copy the .env file to the container
-COPY .env .env
-
-# Set environment variables for docker container
-ENV ASPNETCORE_ENVIRONMENT=Production
-
+EXPOSE 5000
 
 ENTRYPOINT ["dotnet", "SolarWatch.dll"]

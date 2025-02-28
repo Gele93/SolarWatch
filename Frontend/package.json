@@ -3,5 +3,9 @@
     "jwt-decode": "^4.0.0",
     "react-router-dom": "^7.1.5",
     "sass": "^1.84.0"
+  },
+  "scripts": {
+    "build": "vite build"
   }
+  
 }

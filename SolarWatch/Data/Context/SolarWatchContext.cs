@@ -15,18 +15,15 @@ namespace SolarWatch.Data.Context
         public SolarWatchContext(DbContextOptions<SolarWatchContext> options) : base(options)
         {
         }
-        /*
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Seed data
 
             modelBuilder.Entity<CityName>().HasData(
                 CityNameReader.Read()
             );
 
         }
-        */
     }
 }

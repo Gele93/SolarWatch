@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./SolarWatch
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+    command: ["./wait-for-it.sh", "postgres:5433", "--", "dotnet", "ef", "database", "update"]
+
+
+  postgres:
+    image: postgres:15
+    container_name: solarwatch-db
+    restart: always
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: Str0ngP@ssw0rd!
+      POSTGRES_DB: solarwatch
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sa -d solarwatch"]
+      interval: 10s
+      retries: 5
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network      
+
+  frontend:
+    build:
+      context: ./Frontend/solar-watch
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "80:5173"
+    networks:
+      - app-network
+
+networks:
+  app-network:

@@ -22,6 +22,7 @@ namespace SolarWatch.Services.Repositories
             .FirstOrDefault(sm => sm.Date == date);
         public async Task<int> Add(SunMovement sunMovementData)
         {
+            sunMovementData = UniversalizeDate(sunMovementData);
             await _dbContext.SunMovements.AddAsync(sunMovementData);
             await _dbContext.SaveChangesAsync();
             return sunMovementData.Id;
@@ -40,6 +41,13 @@ namespace SolarWatch.Services.Repositories
             _dbContext.SunMovements.Remove(sunMove);
             await _dbContext.SaveChangesAsync();
             return true;
+        }
+
+        private SunMovement UniversalizeDate(SunMovement sunMovement)
+        {
+            var universalizedSunMovement = sunMovement;
+            universalizedSunMovement.Date = sunMovement.Date.ToUniversalTime();
+            return universalizedSunMovement;
         }
     }
 }

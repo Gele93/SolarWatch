@@ -21,11 +21,16 @@ namespace SolarWatch
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
 
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(5000);
+            });
+           
             AddServices(builder);
             ConfigureSwagger(builder);
             AddDbContext(builder, configuration);
@@ -35,10 +40,20 @@ namespace SolarWatch
 
             var app = builder.Build();
 
-            using var scope = app.Services.CreateScope();
-            var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
-            authenticationSeeder.AddRoles();
-            authenticationSeeder.AddAdmin();
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<SolarWatchContext>();
+                dbContext.Database.Migrate();
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                await SeedDatabaseAsync(userManager, roleManager, app);
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -56,10 +71,10 @@ namespace SolarWatch
             app.MapControllers();
 
             app.Run();
-    }
+        }
 
 
-    private static void AddServices(WebApplicationBuilder builder)
+        private static void AddServices(WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<ICityDataProvider, OpenWeatherMapApi>();
             builder.Services.AddScoped<ICityJsonParser, CityJsonParseService>();
@@ -73,7 +88,7 @@ namespace SolarWatch
             builder.Services.AddScoped<ICityService, CityServices>();
             builder.Services.AddScoped<ISunMovementService, SunMovementService>();
             builder.Services.AddScoped<ICityNameRepository, CityNameRepository>();
-            builder.Services.AddScoped<ICityNameService, CityNameService>(); 
+            builder.Services.AddScoped<ICityNameService, CityNameService>();
             builder.Services.AddScoped<AuthenticationSeeder>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -126,7 +141,7 @@ namespace SolarWatch
                     throw new InvalidOperationException("Connection string not found.");
                 }
 
-                options.UseSqlServer(connectionString);
+                options.UseNpgsql(connectionString);
             });
         }
         private static void AddAuthentication(WebApplicationBuilder builder, ConfigurationManager configuration)
@@ -147,19 +162,37 @@ namespace SolarWatch
                 {
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-            ClockSkew = TimeSpan.Zero,
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = issuer,
-            ValidAudience = audience,
-            IssuerSigningKey = new SymmetricSecurityKey(
+                        ClockSkew = TimeSpan.Zero,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = issuer,
+                        ValidAudience = audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(secretKey)
                 ),
-              };
-             });
+                    };
+                });
         }
+
+        private static async Task SeedDatabaseAsync(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, WebApplication app)
+        {
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                using var scope = app.Services.CreateScope();
+                var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+                authenticationSeeder.AddRoles();
+            }
+            var adminUser = await userManager.FindByEmailAsync("admin@admin.com");
+            if (adminUser == null)
+            {
+                using var scope = app.Services.CreateScope();
+                var authenticationSeeder = scope.ServiceProvider.GetRequiredService<AuthenticationSeeder>();
+                authenticationSeeder.AddAdmin();
+            }
+        }
+
 
         private static void AddAuthorizationPolicies(WebApplicationBuilder builder, ConfigurationManager configuration)
         {
@@ -186,8 +219,6 @@ namespace SolarWatch
     })
     .AddRoles<IdentityRole>() //Enable Identity roles 
     .AddEntityFrameworkStores<SolarWatchContext>();
-
-
         }
 
     }
