@@ -23,7 +23,6 @@ namespace SolarWatch.Data.Context
             modelBuilder.Entity<CityName>().HasData(
                 CityNameReader.Read()
             );
-
         }
     }
 }

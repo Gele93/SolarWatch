@@ -30,7 +30,7 @@ namespace SolarWatch
             {
                 options.ListenAnyIP(5000);
             });
-           
+
             AddServices(builder);
             ConfigureSwagger(builder);
             AddDbContext(builder, configuration);
@@ -40,10 +40,13 @@ namespace SolarWatch
 
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
+            if (!app.Environment.IsEnvironment("Testing"))
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<SolarWatchContext>();
-                dbContext.Database.Migrate();
+                using (var scope = app.Services.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<SolarWatchContext>();
+                    dbContext.Database.Migrate();
+                }
             }
 
             using (var scope = app.Services.CreateScope())
@@ -54,6 +57,7 @@ namespace SolarWatch
 
                 await SeedDatabaseAsync(userManager, roleManager, app);
             }
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
