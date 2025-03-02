@@ -18,6 +18,8 @@ namespace SolarIntegrationTest.Factories
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("Testing");
+
             builder.ConfigureServices(services =>
             {
                 var solarWatchDbContextDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<SolarWatchContext>));
@@ -29,11 +31,13 @@ namespace SolarIntegrationTest.Factories
                     options.UseInMemoryDatabase(_dbName);
                 });
 
-                using var scope = services.BuildServiceProvider().CreateScope();
 
+                using var scope = services.BuildServiceProvider().CreateScope();
                 var solarContext = scope.ServiceProvider.GetRequiredService<SolarWatchContext>();
                 solarContext.Database.EnsureDeleted();
                 solarContext.Database.EnsureCreated();
+
+
             });
         }
     }
