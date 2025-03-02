@@ -16,6 +16,7 @@ using SolarWatch.Services.CityServices;
 using SolarWatch.Services.SunMovementServices;
 using SolarWatch.Data.DataImport;
 using SolarWatch.Services.CityNameServices;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SolarWatch
 {

@@ -27,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+      <None Update="city-raw-data/citynames.csv">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <ProjectReference Include="..\SolarWatch\SolarWatch.csproj" />
   </ItemGroup>
 
